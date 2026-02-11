@@ -1,6 +1,6 @@
 # Email Setup Guide for FarmSight Feedback System
 
-The feedback form is configured to send emails to **skvg256@gmail.com** using the Resend API.
+The feedback form is configured to send emails to **farmsight11@gmail.com** using the Resend API.
 
 ## Current Status
 Your server code is correctly configured to send emails. You have your Resend API key ready to add to your Supabase project.
@@ -41,7 +41,7 @@ After adding the secret, you may need to redeploy your Edge Function:
 1. Go to your FarmSight application
 2. Navigate to the Feedback page
 3. Fill out the form and submit
-4. Check your email at **skvg256@gmail.com** for the feedback message
+4. Check your email at **farmsight11@gmail.com** for the feedback message
 
 ## Troubleshooting
 
@@ -56,7 +56,7 @@ After adding the secret, you may need to redeploy your Edge Function:
 
 ### Emails not arriving
 - Check your spam/junk folder
-- Verify the email address in the server code is correct (currently set to `skvg256@gmail.com`)
+- Verify the email address in the server code is correct (currently set to `farmsight11@gmail.com`)
 - Check Resend dashboard for sending logs
 
 ## Important Notes
@@ -83,7 +83,7 @@ The system is configured so when you reply to a feedback email, it will go direc
 
 ## Current Configuration
 
-**Feedback emails are sent to:** skvg256@gmail.com  
+**Feedback emails are sent to:** farmsight11@gmail.com  
 **Email format:** HTML with professional styling  
 **Includes:**
 - Sender's name

@@ -10,6 +10,9 @@
   "scope": "/",
   "lang": "en-US",
   "dir": "ltr",
+  "categories": ["agriculture", "productivity", "business", "utilities"],
+  "related_applications": [],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/icon-72.png",
@@ -59,75 +62,5 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ],
-  "categories": ["agriculture", "productivity", "business", "utilities"],
-  "screenshots": [
-    {
-      "src": "/screenshot-wide.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide"
-    },
-    {
-      "src": "/screenshot-narrow.png",
-      "sizes": "750x1334",
-      "type": "image/png",
-      "form_factor": "narrow"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Market Prices",
-      "short_name": "Prices",
-      "description": "View live market prices for crops",
-      "url": "/?section=market-prices",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Add Crop",
-      "short_name": "Add Crop",
-      "description": "Add crop information",
-      "url": "/?section=add-crop",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Farming Calendar",
-      "short_name": "Calendar",
-      "description": "View farming calendar and tasks",
-      "url": "/?section=farming-calendar",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    }
-  ],
-  "related_applications": [],
-  "prefer_related_applications": false,
-  "features": [
-    "Works offline",
-    "Installable on device",
-    "Real-time market prices",
-    "Crop management",
-    "Farming calendar",
-    "Multi-language support",
-    "Dark mode",
-    "PDF export"
-  ],
-  "iarc_rating_id": "",
-  "serviceworker": {
-    "src": "/sw.js",
-    "scope": "/"
-  }
+  ]
 }

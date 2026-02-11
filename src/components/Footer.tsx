@@ -36,7 +36,7 @@ export function Footer({ variant = 'dark' }: FooterProps) {
         className={`text-[15px] transition-colors duration-500 ${textColor}`}
         style={{ fontSize: '15px' }}
       >
-        Made By Sujal Kerai Soft Tech
+        © 2026 FarmSight | Developed by Sujal Kerai Soft Tech
       </p>
     </footer>
   )

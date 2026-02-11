@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.0.0';
+const CACHE_VERSION = '2.0.0';
 const CACHE_NAME = `farmsight-v${CACHE_VERSION}`;
 const OFFLINE_CACHE = `farmsight-offline-v${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `farmsight-dynamic-v${CACHE_VERSION}`;
@@ -10,7 +10,6 @@ const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/offline.html',
-  '/styles/globals.css',
   '/manifest.json'
 ];
 

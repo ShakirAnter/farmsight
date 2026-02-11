@@ -53,27 +53,8 @@ export function Dashboard({ username, accessToken, onLogout, onSwitchToFeedback 
     // Generate recommendations
     report.recommendations = generateRecommendations(crops, report)
 
-    // Save report to backend
-    try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-f40baa9e/save-report`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
-          },
-          body: JSON.stringify(report)
-        }
-      )
-
-      if (!response.ok) {
-        const error = await response.json()
-        console.error('Error saving report:', error)
-      }
-    } catch (err) {
-      console.error('Failed to save report:', err)
-    }
+    // Note: Reports are generated locally without backend storage
+    // This allows the app to work without authentication
 
     setCurrentReport(report)
     setLoading(false)

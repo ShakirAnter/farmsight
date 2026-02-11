@@ -3,12 +3,15 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { getSupabaseClient } from '../utils/supabase/client'
 import { BackgroundSlideshow } from './BackgroundSlideshow'
+import { Footer } from './Footer'
+import { getSupabaseClient } from '../utils/supabase/client'
 import { motion } from 'motion/react'
-import { Eye, EyeOff } from 'lucide-react'
-import { offlineStorage } from '../utils/offlineStorage'
+import { LogIn, Info, MessageSquare, Eye, EyeOff } from 'lucide-react'
 import logoImage from 'figma:asset/64b13f9d2c96fcfd2df5bbb31b4ae89d8ec5929a.png'
+import { isSupabaseAvailable } from '../utils/environmentDetector'
+import { demoAuth } from '../utils/demoAuth'
+import { useLanguage } from '../contexts/LanguageContext'
 
 interface LoginPageProps {
   onLoginSuccess: (accessToken: string, username: string) => void
@@ -23,42 +26,101 @@ export function LoginPage({ onLoginSuccess, onSwitchToSignup, onSwitchToInfo, on
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const { t } = useLanguage()
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setLoading(true)
 
+    // Basic validation
+    if (!email || !password) {
+      setError('Please enter both email and password')
+      setLoading(false)
+      return
+    }
+
+    // Check if Supabase is available in this environment
+    if (!isSupabaseAvailable()) {
+      // Demo mode - validate credentials against stored users
+      setTimeout(() => {
+        const result = demoAuth.login(email, password);
+        
+        if (!result.success) {
+          setError(result.error || 'Invalid credentials');
+          setLoading(false);
+          return;
+        }
+        
+        const demoToken = 'demo-token-' + Date.now();
+        
+        // Save to localStorage
+        localStorage.setItem('farmsight_auth', JSON.stringify({
+          accessToken: demoToken,
+          username: result.username
+        }));
+        
+        setLoading(false);
+        onLoginSuccess(demoToken, result.username!);
+      }, 500);
+      return;
+    }
+
+    // Try Supabase authentication with timeout
     try {
       const supabase = getSupabaseClient()
-
-      const { data, error } = await supabase.auth.signInWithPassword({
+      
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Connection timeout')), 5000)
+      );
+      
+      const loginPromise = supabase.auth.signInWithPassword({
         email,
         password,
-      })
+      });
+
+      const { data, error } = await Promise.race([
+        loginPromise,
+        timeoutPromise
+      ]) as any;
+
+      setLoading(false)
 
       if (error) {
-        console.error('Login error:', error)
-        // Provide more user-friendly error messages
-        if (error.message.includes('Invalid login credentials')) {
-          setError('❌ Invalid email or password. Please double-check your credentials. If you just signed up, make sure you\'re using the exact password you created.')
-        } else if (error.message.includes('Email not confirmed')) {
-          setError('Please confirm your email address before logging in.')
-        } else {
-          setError(error.message)
-        }
-        setLoading(false)
+        setError(error.message || 'Invalid email or password')
         return
       }
 
       if (data.session?.access_token) {
         const username = data.user?.user_metadata?.username || email.split('@')[0]
+        
+        // Save to localStorage as fallback
+        localStorage.setItem('farmsight_auth', JSON.stringify({
+          accessToken: data.session.access_token,
+          username: username
+        }));
+        
         onLoginSuccess(data.session.access_token, username)
       }
-    } catch (err) {
-      console.error('Login exception:', err)
-      setError('An unexpected error occurred')
+    } catch (err: any) {
       setLoading(false)
+      
+      // Fallback to demo mode with validation
+      const result = demoAuth.login(email, password);
+      
+      if (!result.success) {
+        setError(result.error || 'Connection error and invalid credentials');
+        return;
+      }
+      
+      const demoToken = 'demo-token-' + Date.now();
+      
+      localStorage.setItem('farmsight_auth', JSON.stringify({
+        accessToken: demoToken,
+        username: result.username
+      }));
+      
+      onLoginSuccess(demoToken, result.username!);
     }
   }
 
@@ -127,18 +189,18 @@ export function LoginPage({ onLoginSuccess, onSwitchToSignup, onSwitchToInfo, on
               </motion.div>
               
               <motion.form 
-                onSubmit={handleLogin} 
+                onSubmit={handleSubmit} 
                 className="space-y-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.5 }}
               >
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('login.email')}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="farmer@example.com"
+                placeholder={t('login.emailPlaceholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -146,12 +208,12 @@ export function LoginPage({ onLoginSuccess, onSwitchToSignup, onSwitchToInfo, on
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('login.password')}</Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder={t('login.passwordPlaceholder')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -160,7 +222,7 @@ export function LoginPage({ onLoginSuccess, onSwitchToSignup, onSwitchToInfo, on
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
                   tabIndex={-1}
                 >
                   {showPassword ? (
@@ -173,13 +235,13 @@ export function LoginPage({ onLoginSuccess, onSwitchToSignup, onSwitchToInfo, on
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded">
                 {error}
               </div>
             )}
 
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? 'Logging in...' : 'Log In'}
+                  {loading ? t('login.loggingIn') : t('login.submit')}
                 </Button>
               </motion.form>
 
@@ -208,18 +270,18 @@ export function LoginPage({ onLoginSuccess, onSwitchToSignup, onSwitchToInfo, on
               </motion.div>
 
               <motion.div 
-                className="mt-2 text-center"
+                className="mt-6 text-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.7, duration: 0.5 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
               >
-                <p className="text-sm text-gray-600">
-                  Don't have an account?{' '}
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {t('login.noAccount')}{' '}
                   <button
                     onClick={onSwitchToSignup}
-                    className="text-green-600 hover:underline"
+                    className="text-green-600 hover:underline dark:text-green-400"
                   >
-                    Create Account
+                    {t('login.signupLink')}
                   </button>
                 </p>
               </motion.div>
@@ -250,6 +312,7 @@ export function LoginPage({ onLoginSuccess, onSwitchToSignup, onSwitchToInfo, on
           </Card>
         </motion.div>
       </div>
+      <Footer />
     </BackgroundSlideshow>
   )
 }

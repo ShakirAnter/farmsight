@@ -1,45 +1,46 @@
 import { useState, useEffect } from 'react'
-import { LoginPage } from './components/LoginPage'
-import { SignupPage } from './components/SignupPage'
 import { EnhancedDashboard } from './components/EnhancedDashboard'
 import { InfoPage } from './components/InfoPage'
 import { FeedbackPage } from './components/FeedbackPage'
-import { getSupabaseClient } from './utils/supabase/client'
 import { BackgroundSlideshow } from './components/BackgroundSlideshow'
 import { Footer } from './components/Footer'
-import { OfflineIndicator } from './components/OfflineIndicator'
 import { PWAInstallPrompt } from './components/PWAInstallPrompt'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import { offlineStorage } from './utils/offlineStorage'
 import { offlineSync } from './utils/offlineSync'
+import { networkStatus } from './utils/networkStatus'
 import { LanguageProvider } from './contexts/LanguageContext'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { Toaster } from './components/ui/sonner'
-import { OfflineStatusBanner } from './components/OfflineStatusBanner'
 import { SEOHead } from './components/SEOHead'
 
-type View = 'login' | 'signup' | 'dashboard' | 'info' | 'feedback'
+type View = 'dashboard' | 'info' | 'feedback'
 
 function AppContent() {
-  const [view, setView] = useState<View>('signup')
-  const [accessToken, setAccessToken] = useState<string | null>(null)
-  const [username, setUsername] = useState<string>('')
+  const [view, setView] = useState<View>('dashboard')
+  const [username, setUsername] = useState<string>('Farmer')
   const [loading, setLoading] = useState(true)
 
   // Initialize offline storage and service worker
   useEffect(() => {
     // Initialize IndexedDB
-    offlineStorage.init().catch(console.error);
+    offlineStorage.init().catch(() => {
+      // Silently fail - app works without IndexedDB
+    });
 
-    // Register service worker (gracefully handle if not available)
-    // Note: Service workers are not available in iframe/Figma preview environments
-    if ('serviceWorker' in navigator && window.location.protocol === 'https:' && !window.location.hostname.includes('figma')) {
+    // Register service worker (works in all environments)
+    if ('serviceWorker' in navigator) {
       // Use a timeout to prevent blocking
       const registerSW = async () => {
         try {
           const registration = await navigator.serviceWorker.register('/sw.js', {
-            scope: '/'
+            scope: '/',
+            updateViaCache: 'none'
           });
           console.log('✅ Service Worker registered:', registration);
+          
+          // Check for updates on page load
+          registration.update();
           
           // Listen for updates
           registration.addEventListener('updatefound', () => {
@@ -48,6 +49,7 @@ function AppContent() {
               newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                   console.log('🔄 New version available!');
+                  // Optionally notify user of update
                 }
               });
             }
@@ -60,15 +62,13 @@ function AppContent() {
             }
           });
         } catch (error) {
-          console.log('ℹ️ Service Worker not registered (not available in this environment)');
+          console.log('Service Worker not available:', error);
           // App continues to work without service worker
         }
       };
 
-      // Register after a short delay to not block initial load
-      setTimeout(registerSW, 1000);
-    } else {
-      console.warn('⚠️ Service Workers not supported in this browser');
+      // Register immediately for better offline support
+      registerSW();
     }
 
     // Setup online/offline sync
@@ -85,133 +85,38 @@ function AppContent() {
     );
   }, []);
 
-  // Check for existing session on mount
+  // Check for existing username on mount
   useEffect(() => {
     const checkSession = async () => {
       try {
-        // First check offline storage (if available)
-        const offlineAuth = await offlineStorage.getAuth();
-        
-        if (offlineAuth && offlineAuth.accessToken) {
-          setAccessToken(offlineAuth.accessToken);
-          setUsername(offlineAuth.username || 'Farmer');
-          setView('dashboard');
-          setLoading(false);
-          return;
+        // Check localStorage for saved username
+        const localAuth = localStorage.getItem('farmsight_auth');
+        if (localAuth) {
+          try {
+            const authData = JSON.parse(localAuth);
+            setUsername(authData.username || 'Farmer');
+          } catch (error) {
+            // Invalid auth data - use default
+            setUsername('Farmer');
+          }
         }
       } catch (error) {
-        console.warn('⚠️ Offline storage not available:', error);
-        // Continue with normal flow
-      }
-
-      // Then check Supabase if online
-      if (navigator.onLine) {
-        try {
-          const supabase = getSupabaseClient()
-
-          const { data: { session } } = await supabase.auth.getSession()
-          
-          if (session?.access_token) {
-            const user = session.user?.user_metadata?.username || session.user?.email?.split('@')[0] || 'Farmer';
-            setAccessToken(session.access_token)
-            setUsername(user)
-            setView('dashboard')
-            
-            // Try to save to offline storage
-            try {
-              await offlineStorage.saveAuth({
-                accessToken: session.access_token,
-                username: user
-              });
-            } catch (error) {
-              console.warn('⚠️ Could not save to offline storage:', error);
-            }
-          } else {
-            // No existing session - check localStorage for hint about whether user has account
-            const hasAccount = localStorage.getItem('hasAccount')
-            setView(hasAccount === 'true' ? 'login' : 'signup')
-          }
-        } catch (error) {
-          console.error('❌ Error checking session:', error);
-          const hasAccount = localStorage.getItem('hasAccount')
-          setView(hasAccount === 'true' ? 'login' : 'signup')
-        }
-      } else {
-        // Offline and no cached auth - show signup
-        const hasAccount = localStorage.getItem('hasAccount')
-        setView(hasAccount === 'true' ? 'login' : 'signup')
+        console.error('❌ Error checking session:', error);
       }
       
-      setLoading(false)
+      setLoading(false);
     }
 
-    checkSession()
-  }, [])
-
-  // Automatic logout when user leaves the page
-  useEffect(() => {
-    const handleBeforeUnload = async (e: BeforeUnloadEvent) => {
-      // Only logout if user is logged in
-      if (accessToken) {
-        const supabase = getSupabaseClient()
-        await supabase.auth.signOut()
-        
-        // Clear session state
-        setAccessToken(null)
-        setUsername('')
-      }
-    }
-
-    const handlePageHide = async () => {
-      // Only logout if user is logged in
-      if (accessToken) {
-        const supabase = getSupabaseClient()
-        await supabase.auth.signOut()
-      }
-    }
-
-    // Add event listeners for page unload
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    window.addEventListener('pagehide', handlePageHide)
-
-    // Cleanup event listeners
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-      window.removeEventListener('pagehide', handlePageHide)
-    }
-  }, [accessToken])
-
-  const handleLoginSuccess = (token: string, user: string) => {
-    localStorage.setItem('hasAccount', 'true')
-    setAccessToken(token)
-    setUsername(user)
-    setView('dashboard')
-  }
-
-  const handleSignupSuccess = () => {
-    // Mark that user has an account now
-    localStorage.setItem('hasAccount', 'true')
-    // After successful signup, switch to login
-    setView('login')
-  }
-
-  const handleLogout = async () => {
-    const supabase = getSupabaseClient()
-
-    await supabase.auth.signOut()
-    setAccessToken(null)
-    setUsername('')
-    // User still has an account, so show login after logout
-    setView('login')
-  }
+    checkSession();
+  }, []);
 
   if (loading) {
     return (
       <BackgroundSlideshow>
         <div className="min-h-screen flex flex-col items-center justify-center">
-          <div className="text-center bg-white/80 backdrop-blur-sm p-8 rounded-lg shadow-xl">
+          <div className="text-center bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-8 rounded-lg shadow-xl">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-300">Loading FarmSight...</p>
           </div>
           <Footer variant="dark" />
         </div>
@@ -222,8 +127,8 @@ function AppContent() {
   if (view === 'info') {
     return (
       <>
-        <OfflineIndicator />
-        <InfoPage onBack={() => setView('login')} />
+        <PWAInstallPrompt />
+        <InfoPage onBack={() => setView('dashboard')} />
       </>
     )
   }
@@ -231,60 +136,26 @@ function AppContent() {
   if (view === 'feedback') {
     return (
       <>
-        <OfflineIndicator />
-        <FeedbackPage 
-          onBack={() => setView(accessToken ? 'dashboard' : 'login')} 
-          username={username}
-        />
-      </>
-    )
-  }
-
-  if (view === 'login') {
-    return (
-      <>
-        <OfflineIndicator />
-        <LoginPage
-          onLoginSuccess={handleLoginSuccess}
-          onSwitchToSignup={() => setView('signup')}
-          onSwitchToInfo={() => setView('info')}
-          onSwitchToFeedback={() => setView('feedback')}
-        />
-      </>
-    )
-  }
-
-  if (view === 'signup') {
-    return (
-      <>
-        <OfflineIndicator />
-        <SignupPage
-          onSignupSuccess={handleSignupSuccess}
-          onSwitchToLogin={() => setView('login')}
-          onSwitchToInfo={() => setView('info')}
-          onSwitchToFeedback={() => setView('feedback')}
-        />
-      </>
-    )
-  }
-
-  if (view === 'dashboard' && accessToken) {
-    return (
-      <>
-        <OfflineIndicator />
-        <OfflineStatusBanner />
         <PWAInstallPrompt />
-        <EnhancedDashboard
+        <FeedbackPage 
+          onBack={() => setView('dashboard')} 
           username={username}
-          accessToken={accessToken}
-          onLogout={handleLogout}
-          onSwitchToFeedback={() => setView('feedback')}
         />
       </>
     )
   }
 
-  return null
+  // Main dashboard view - always accessible
+  return (
+    <>
+      <PWAInstallPrompt />
+      <EnhancedDashboard
+        username={username}
+        accessToken=""
+        onSwitchToFeedback={() => setView('feedback')}
+      />
+    </>
+  )
 }
 
 export default function App() {
@@ -293,7 +164,9 @@ export default function App() {
       <ThemeProvider>
         <SEOHead />
         <Toaster />
-        <AppContent />
+        <ErrorBoundary>
+          <AppContent />
+        </ErrorBoundary>
       </ThemeProvider>
     </LanguageProvider>
   );

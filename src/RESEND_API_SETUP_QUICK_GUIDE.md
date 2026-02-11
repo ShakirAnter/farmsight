@@ -48,7 +48,7 @@ supabase functions deploy server
 1. Open your FarmSight application
 2. Go to the **Feedback** page
 3. Fill out and submit the form
-4. Check **skvg256@gmail.com** for the feedback email (check spam folder too!)
+4. Check **farmsight11@gmail.com** for the feedback email (check spam folder too!)
 
 ---
 
@@ -56,7 +56,7 @@ supabase functions deploy server
 
 Once you add the API key:
 - ✅ All feedback will be **saved to the database** (already working)
-- ✅ Email notifications will be **sent to skvg256@gmail.com** (will work after adding key)
+- ✅ Email notifications will be **sent to farmsight11@gmail.com** (will work after adding key)
 - ✅ You can **reply directly** to feedback emails to respond to users
 - ✅ Professional HTML-formatted emails with sender details
 

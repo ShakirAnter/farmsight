@@ -1,18 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { Home, Calendar, TrendingUp, BookOpen, Bug, GraduationCap, Info, GitCompare, Menu, MessageSquare, Moon, Sun, Globe, Download } from 'lucide-react'
 import { Button } from './ui/button'
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
-import { 
-  Home, Calendar, GitCompare, TrendingUp, 
-  BookOpen, Bug, GraduationCap, User, Settings,
-  LogOut, MessageSquare, Menu, Moon, Sun, Globe
-} from 'lucide-react'
-import { DashboardBackgroundSlideshow } from './DashboardBackgroundSlideshow'
-import { Footer } from './Footer'
-import { OfflineStatusBanner } from './OfflineStatusBanner'
-import { ShareButton } from './ShareButton'
-import logoImage from 'figma:asset/64b13f9d2c96fcfd2df5bbb31b4ae89d8ec5929a.png'
-
-// Import all the new dashboard sections
 import { DashboardHome } from './dashboard/DashboardHome'
 import { FarmingCalendar } from './dashboard/FarmingCalendar'
 import { CropComparison } from './dashboard/CropComparison'
@@ -20,15 +9,21 @@ import { MarketPrices } from './dashboard/MarketPrices'
 import { FarmingTips } from './dashboard/FarmingTips'
 import { DiseaseGuide } from './dashboard/DiseaseGuide'
 import { Tutorials } from './dashboard/Tutorials'
-import { ProfileManagement } from './dashboard/ProfileManagement'
+import { AboutPage } from './AboutPage'
+import { FeedbackPage } from './FeedbackPage'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useTheme } from '../contexts/ThemeContext'
 import { Language } from '../utils/translations'
+import { DashboardBackgroundSlideshow } from './DashboardBackgroundSlideshow'
+import { ShareButton } from './ShareButton'
+import { Footer } from './Footer'
+import { usePWAInstall } from '../hooks/usePWAInstall'
+import { toast } from 'sonner@2.0.3'
+import logoImage from 'figma:asset/64b13f9d2c96fcfd2df5bbb31b4ae89d8ec5929a.png'
 
 interface EnhancedDashboardProps {
   username: string
   accessToken: string
-  onLogout: () => void
   onSwitchToFeedback: () => void
 }
 
@@ -40,14 +35,71 @@ type DashboardView =
   | 'tips'
   | 'diseases'
   | 'tutorials'
-  | 'profile'
+  | 'about'
+  | 'feedback'
 
-export function EnhancedDashboard({ username, accessToken, onLogout, onSwitchToFeedback }: EnhancedDashboardProps) {
+export function EnhancedDashboard({ username, accessToken, onSwitchToFeedback }: EnhancedDashboardProps) {
   const [currentView, setCurrentView] = useState<DashboardView>('home')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
   const { language, setLanguage, t } = useLanguage()
   const { darkMode, toggleDarkMode } = useTheme()
+  const { isInstallable, isInstalled, installApp } = usePWAInstall()
+
+  const handleInstallClick = async () => {
+    // If already installed, show a message
+    if (isInstalled) {
+      toast.success('FarmSight is already installed! 🎉', {
+        description: 'Access it from your home screen or app drawer.',
+      })
+      return
+    }
+
+    // Always show manual installation instructions based on platform
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    const isAndroid = /Android/.test(navigator.userAgent)
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+    const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)
+    const isEdge = /Edg/.test(navigator.userAgent)
+    const isFirefox = /Firefox/.test(navigator.userAgent)
+    
+    if (isIOS) {
+      toast.info('📱 Install FarmSight on iOS', {
+        description: '1. Tap the Share button (⬆️) at the bottom\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm\n4. FarmSight icon will appear on your home screen!',
+        duration: 10000,
+      })
+    } else if (isAndroid && isChrome) {
+      toast.info('📱 Install FarmSight on Android Chrome', {
+        description: '1. Tap the menu icon (⋮) in the top-right corner\n2. Select "Install app" or "Add to Home screen"\n3. Tap "Install" to confirm\n4. FarmSight will be added to your app drawer!',
+        duration: 10000,
+      })
+    } else if (isAndroid) {
+      toast.info('📱 Install FarmSight on Android', {
+        description: '1. Tap the browser menu (⋮)\n2. Look for "Add to Home screen" or "Install"\n3. Confirm to install\n4. FarmSight will appear in your apps!',
+        duration: 10000,
+      })
+    } else if (isChrome || isEdge) {
+      toast.info('💻 Install FarmSight on Desktop', {
+        description: '1. Look for the install icon (⊕ or 🔽) in the address bar (right side)\n2. Click the icon\n3. Click "Install" in the popup\n4. FarmSight will open as a standalone app!\n\nAlternative: Click browser menu (⋮) → "Install FarmSight..."',
+        duration: 12000,
+      })
+    } else if (isFirefox) {
+      toast.info('💻 Install FarmSight on Firefox', {
+        description: '1. Click the menu icon (☰) in the top-right\n2. Select "Install FarmSight"\n3. Confirm installation\n4. App will open in its own window!',
+        duration: 10000,
+      })
+    } else if (isSafari) {
+      toast.info('💻 Install FarmSight on Safari', {
+        description: 'Desktop Safari doesn\'t support PWA installation.\n\nFor iPhone/iPad:\n1. Tap Share (⬆️)\n2. "Add to Home Screen"\n3. Tap "Add"',
+        duration: 10000,
+      })
+    } else {
+      toast.info('💻 Install FarmSight', {
+        description: '1. Look for an install icon (⊕) in your browser address bar\n2. Or check your browser menu for "Install" or "Add to Home Screen"\n3. Follow the prompts to install\n4. Enjoy FarmSight as a standalone app!',
+        duration: 10000,
+      })
+    }
+  }
 
   const menuItems = [
     { id: 'home', label: t('dashboard'), icon: Home, color: 'emerald' },
@@ -57,13 +109,14 @@ export function EnhancedDashboard({ username, accessToken, onLogout, onSwitchToF
     { id: 'tips', label: t('farmingTips'), icon: BookOpen, color: 'teal' },
     { id: 'diseases', label: t('diseaseGuide'), icon: Bug, color: 'rose' },
     { id: 'tutorials', label: t('tutorials'), icon: GraduationCap, color: 'indigo' },
-    { id: 'profile', label: t('profile'), icon: User, color: 'cyan' },
+    { id: 'about', label: 'About', icon: Info, color: 'cyan' },
+    { id: 'feedback', label: t('feedback'), icon: MessageSquare, color: 'amber' },
   ]
 
   const renderContent = () => {
     switch (currentView) {
       case 'home':
-        return <DashboardHome username={username} accessToken={accessToken} onReportGenerated={() => setRefreshTrigger(prev => prev + 1)} />
+        return <DashboardHome username={username} accessToken={accessToken} onReportGenerated={() => setRefreshTrigger(prev => prev + 1)} t={t} />
       case 'calendar':
         return <FarmingCalendar />
       case 'comparison':
@@ -76,10 +129,12 @@ export function EnhancedDashboard({ username, accessToken, onLogout, onSwitchToF
         return <DiseaseGuide />
       case 'tutorials':
         return <Tutorials />
-      case 'profile':
-        return <ProfileManagement username={username} accessToken={accessToken} />
+      case 'about':
+        return <AboutPage />
+      case 'feedback':
+        return <FeedbackPage onBack={() => setCurrentView('home')} username={username} />
       default:
-        return <DashboardHome username={username} accessToken={accessToken} onReportGenerated={() => setRefreshTrigger(prev => prev + 1)} />
+        return <DashboardHome username={username} accessToken={accessToken} onReportGenerated={() => setRefreshTrigger(prev => prev + 1)} t={t} />
     }
   }
 
@@ -118,6 +173,9 @@ export function EnhancedDashboard({ username, accessToken, onLogout, onSwitchToF
         'cyan': darkMode 
           ? 'bg-gradient-to-br from-cyan-600 to-teal-600 text-white shadow-lg shadow-cyan-900/50 border-2 border-cyan-400 font-semibold' 
           : 'bg-gradient-to-br from-cyan-400 via-teal-400 to-cyan-500 text-white shadow-xl shadow-cyan-500/50 border-2 border-cyan-300 font-semibold',
+        'amber': darkMode 
+          ? 'bg-gradient-to-br from-amber-600 to-yellow-600 text-white shadow-lg shadow-amber-900/50 border-2 border-amber-400 font-semibold' 
+          : 'bg-gradient-to-br from-amber-400 via-yellow-400 to-amber-500 text-white shadow-xl shadow-amber-500/50 border-2 border-amber-300 font-semibold',
       }
       
       return colorClasses[color] || (darkMode ? 'bg-gradient-to-br from-green-600 to-emerald-600 text-white shadow-lg' : 'bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-xl')
@@ -129,7 +187,7 @@ export function EnhancedDashboard({ username, accessToken, onLogout, onSwitchToF
           <div className="flex items-center gap-3 mb-4">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full blur-md opacity-50"></div>
-              <img src={logoImage} alt="Logo" className="relative w-10 h-10 object-contain" />
+              <img src={logoImage} alt="Logo" className="relative w-16 h-16 object-contain" />
             </div>
             <div>
               <h2 className={`${darkMode ? 'text-white' : 'text-gray-900'} font-bold`}>Uganda Farmer Portal</h2>
@@ -185,24 +243,22 @@ export function EnhancedDashboard({ username, accessToken, onLogout, onSwitchToF
             {darkMode ? t('lightMode') : t('darkMode')}
           </Button>
 
-          {/* Feedback Button */}
+          {/* PWA Install Button - Always visible */}
           <Button
-            variant="outline"
-            className="w-full justify-start gap-2"
-            onClick={onSwitchToFeedback}
+            variant={isInstalled ? "outline" : "default"}
+            className={`w-full justify-start gap-2 ${
+              !isInstalled && isInstallable 
+                ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/50 animate-pulse' 
+                : ''
+            }`}
+            onClick={handleInstallClick}
+            disabled={isInstalled}
           >
-            <MessageSquare className="h-4 w-4" />
-            {t('feedback')}
-          </Button>
-
-          {/* Logout Button */}
-          <Button
-            variant="outline"
-            className="w-full justify-start gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-            onClick={onLogout}
-          >
-            <LogOut className="h-4 w-4" />
-            {t('logout')}
+            <Download className="h-4 w-4" />
+            {isInstalled 
+              ? (language === 'lg' ? 'Yateekeddwa' : language === 'sw' ? 'Imesakinishwa' : 'Installed ✓')
+              : (language === 'lg' ? 'Teeka ku Ssimu' : language === 'sw' ? 'Sakinisha' : 'Install App')
+            }
           </Button>
         </div>
       </div>

@@ -10,9 +10,10 @@ interface DashboardHomeProps {
   username: string
   accessToken: string
   onReportGenerated?: () => void
+  t: (key: string) => string
 }
 
-export function DashboardHome({ username, accessToken, onReportGenerated }: DashboardHomeProps) {
+export function DashboardHome({ username, accessToken, onReportGenerated, t }: DashboardHomeProps) {
   const [currentReport, setCurrentReport] = useState<Report | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -45,30 +46,9 @@ export function DashboardHome({ username, accessToken, onReportGenerated }: Dash
 
     report.recommendations = generateRecommendations(crops, report)
 
-    // Save report to backend
-    try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-f40baa9e/save-report`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
-          },
-          body: JSON.stringify(report)
-        }
-      )
-
-      if (response.ok) {
-        // Trigger refresh in analytics
-        onReportGenerated?.()
-      } else {
-        console.error('Error saving report')
-      }
-    } catch (err) {
-      console.error('Failed to save report:', err)
-    }
-
+    // Note: Reports are generated locally without backend storage
+    // This allows the app to work without authentication
+    
     setCurrentReport(report)
     setLoading(false)
   }
@@ -98,23 +78,12 @@ export function DashboardHome({ username, accessToken, onReportGenerated }: Dash
 
   return (
     <div className="space-y-6">
-      <div className="p-6 bg-gradient-to-br from-blue-100 via-sky-100 to-cyan-100 dark:from-blue-900/40 dark:via-sky-900/40 dark:to-cyan-900/40 border-2 border-blue-300 dark:border-blue-700 rounded-xl flex items-start gap-4 shadow-lg">
-        <div className="text-blue-600 dark:text-blue-400 text-3xl">🔒</div>
-        <div>
-          <p className="text-sm text-blue-900 dark:text-blue-200 font-semibold mb-1">
-            <strong>Security Notice:</strong>
-          </p>
-          <p className="text-sm text-blue-800 dark:text-blue-300">
-            For your protection, you will be automatically logged out when you close this tab or browser.
-          </p>
-        </div>
-      </div>
-
-      <Card className="shadow-2xl dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 bg-white dark:border-green-600 border-2 border-green-200">
+      {/* Welcome Section with animated greeting */}
+      <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border-2 border-green-200 dark:border-green-800 shadow-xl overflow-hidden relative animate-in fade-in-50 slide-in-from-top-5 duration-700">
         <CardHeader className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-b-2 border-green-200 dark:border-green-700">
-          <CardTitle className="dark:text-white text-2xl font-bold bg-gradient-to-r from-green-700 to-emerald-700 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">Farm Data Input</CardTitle>
+          <CardTitle className="dark:text-white text-2xl font-bold bg-gradient-to-r from-green-700 to-emerald-700 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">{t('farmDataInput')}</CardTitle>
           <CardDescription className="dark:text-gray-300 text-gray-700 font-medium">
-            Enter your crop information to generate a comprehensive farm report with recommendations
+            {t('farmDataInputDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6">

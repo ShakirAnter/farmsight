@@ -270,7 +270,7 @@ app.post('/make-server-f40baa9e/send-feedback', async (c) => {
     try {
       const emailPayload = {
         from: 'FarmSight Feedback <onboarding@resend.dev>',
-        to: ['skvg256@gmail.com'],
+        to: ['farmsight11@gmail.com'],
         reply_to: email,
         subject: `FarmSight Feedback: ${subject}`,
         html: `

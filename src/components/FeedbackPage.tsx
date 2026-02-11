@@ -133,10 +133,10 @@ export function FeedbackPage({ onBack, username }: FeedbackPageProps) {
               <CardContent>
                 <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <p className="text-sm text-blue-800">
-                    📧 <strong>Your feedback will be sent to:</strong> skvg256@gmail.com
+                    📧 <strong>Your feedback will be sent to:</strong> farmsight11@gmail.com
                   </p>
                   <p className="text-xs text-blue-600 mt-1">
-                    We typically respond within 24-48 hours.
+                    We typically respond within 24-48 hours
                   </p>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-5">

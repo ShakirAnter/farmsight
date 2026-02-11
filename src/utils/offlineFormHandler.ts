@@ -140,10 +140,7 @@ export const offlineFormHandler = {
    */
   async forceSyncAll(): Promise<void> {
     if (!navigator.onLine) {
-      toast.info('Cannot sync while offline', {
-        description: 'Data will sync automatically when you reconnect.',
-        duration: 3000,
-      });
+      // Silently return - no toast notification when offline
       return;
     }
 

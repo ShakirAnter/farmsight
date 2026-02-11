@@ -9,11 +9,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
   <!-- Open Graph -->
-  <meta property="og:title" content="FarmSight - Offline Mode">
-  <meta property="og:description" content="FarmSight works offline! Continue managing your farm data without internet connection.">
+  <meta property="og:title" content="FarmSight">
+  <meta property="og:description" content="FarmSight - Comprehensive farming management system for Ugandan farmers.">
   <meta property="og:type" content="website">
   
-  <title>FarmSight - Offline Mode</title>
+  <title>FarmSight</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="/icon-192.png">
   <style>
@@ -36,7 +36,7 @@
     
     .container {
       text-align: center;
-      max-width: 600px;
+      max-width: 400px;
       animation: fadeIn 0.5s ease-in;
     }
     
@@ -51,300 +51,52 @@
       }
     }
     
-    .icon-container {
-      margin-bottom: 30px;
-      animation: float 3s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
-    }
-    
     .icon {
-      font-size: 100px;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: spin 1s linear infinite;
     }
     
-    @keyframes pulse {
-      0%, 100% { 
-        opacity: 1; 
-        transform: scale(1);
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
       }
-      50% { 
-        opacity: 0.7; 
-        transform: scale(1.05);
+      to {
+        transform: rotate(360deg);
       }
     }
     
     h1 {
-      font-size: 42px;
+      font-size: 32px;
       margin-bottom: 16px;
       font-weight: 700;
       text-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
     
-    .subtitle {
-      font-size: 20px;
-      margin-bottom: 24px;
-      opacity: 0.95;
-      font-weight: 500;
-    }
-    
     p {
       font-size: 18px;
       line-height: 1.6;
-      margin-bottom: 32px;
       opacity: 0.9;
-    }
-    
-    .features {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 20px;
-      padding: 30px;
-      margin: 30px 0;
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    }
-    
-    .features h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-      font-weight: 600;
-    }
-    
-    .features ul {
-      list-style: none;
-      text-align: left;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 12px;
-    }
-    
-    .features li {
-      padding: 12px;
-      padding-left: 40px;
-      position: relative;
-      font-size: 16px;
-      transition: transform 0.2s;
-    }
-    
-    .features li:hover {
-      transform: translateX(5px);
-    }
-    
-    .features li:before {
-      content: "✓";
-      position: absolute;
-      left: 10px;
-      top: 12px;
-      color: #4ade80;
-      font-weight: bold;
-      font-size: 20px;
-      background: rgba(74, 222, 128, 0.2);
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .button-group {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 32px;
-    }
-    
-    .retry-btn {
-      background: white;
-      color: #16a34a;
-      border: none;
-      padding: 16px 40px;
-      font-size: 18px;
-      font-weight: 700;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .retry-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-      background: #f0fdf4;
-    }
-    
-    .retry-btn:active {
-      transform: translateY(0);
-    }
-
-    .secondary-btn {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      border: 2px solid rgba(255, 255, 255, 0.4);
-      padding: 16px 40px;
-      font-size: 18px;
-      font-weight: 600;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s;
-      backdrop-filter: blur(10px);
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .secondary-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      border-color: rgba(255, 255, 255, 0.6);
-      transform: translateY(-2px);
-    }
-    
-    .status-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255, 255, 255, 0.2);
-      padding: 12px 24px;
-      border-radius: 50px;
-      margin-bottom: 24px;
-      backdrop-filter: blur(10px);
-    }
-    
-    .status-dot {
-      width: 12px;
-      height: 12px;
-      background: #f59e0b;
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-    
-    @media (max-width: 640px) {
-      h1 {
-        font-size: 32px;
-      }
-      
-      .subtitle {
-        font-size: 18px;
-      }
-      
-      p {
-        font-size: 16px;
-      }
-      
-      .features {
-        padding: 20px;
-      }
-      
-      .features ul {
-        grid-template-columns: 1fr;
-      }
-      
-      .button-group {
-        flex-direction: column;
-      }
-      
-      .retry-btn, .secondary-btn {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-
-    .connection-tip {
-      margin-top: 24px;
-      padding: 16px;
-      background: rgba(59, 130, 246, 0.2);
-      border-radius: 12px;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-    }
-
-    .connection-tip p {
-      margin: 0;
-      font-size: 14px;
-      opacity: 0.95;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="status-indicator">
-      <div class="status-dot"></div>
-      <span style="font-weight: 600;">Offline Mode Active</span>
-    </div>
-
-    <div class="icon-container">
-      <div class="icon">📡</div>
-    </div>
-    
-    <h1>You're Currently Offline</h1>
-    <p class="subtitle">No internet connection detected</p>
-    
-    <p>Don't worry! FarmSight is designed to work offline. You can continue managing your farm data, and everything will sync automatically when your connection is restored.</p>
-    
-    <div class="button-group">
-      <button class="retry-btn" onclick="window.location.reload()">
-        <span style="font-size: 20px;">🔄</span>
-        Try Again
-      </button>
-      <button class="secondary-btn" onclick="window.location.href='/'">
-        <span style="font-size: 20px;">🏠</span>
-        Go to Dashboard
-      </button>
-    </div>
-    
-    <div class="features">
-      <h2>✨ Available Offline Features</h2>
-      <ul>
-        <li>View and manage your farm data</li>
-        <li>Add new crop information</li>
-        <li>Generate farming reports</li>
-        <li>Download PDF documents</li>
-        <li>Access farming calendar</li>
-        <li>Browse disease guides</li>
-        <li>View cached market prices</li>
-        <li>All data saves locally</li>
-        <li>Automatic sync when online</li>
-      </ul>
-    </div>
-
-    <div class="connection-tip">
-      <p><strong>💡 Tip:</strong> Your changes are being saved locally. When you reconnect to the internet, all your data will sync automatically in the background.</p>
-    </div>
+    <div class="icon">🌾</div>
+    <h1>Loading FarmSight...</h1>
+    <p>Please wait while we load your farm management dashboard.</p>
   </div>
 
   <script>
-    // Automatically retry connection every 10 seconds
-    let retryCount = 0;
-    const maxRetries = 3;
+    // Immediately redirect to main app
+    // The service worker will serve the cached version
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 100);
 
-    function checkConnection() {
-      if (navigator.onLine) {
-        window.location.reload();
-      } else {
-        retryCount++;
-        if (retryCount < maxRetries) {
-          setTimeout(checkConnection, 10000);
-        }
-      }
-    }
-
-    // Start checking after 5 seconds
-    setTimeout(checkConnection, 5000);
-
-    // Listen for online event
+    // Also listen for online event
     window.addEventListener('online', () => {
-      window.location.reload();
+      window.location.href = '/';
     });
   </script>
 </body>

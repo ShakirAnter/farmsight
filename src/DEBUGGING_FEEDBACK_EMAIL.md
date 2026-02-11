@@ -112,7 +112,7 @@ After fixing issues, test:
 2. Go to Feedback page
 3. Submit test feedback
 4. Check Supabase logs for success message
-5. Check skvg256@gmail.com inbox (and spam folder!)
+5. Check farmsight11@gmail.com inbox (and spam folder!)
 
 ## Common Issues & Solutions
 
@@ -123,7 +123,7 @@ After fixing issues, test:
 1. **Check Supabase Edge Function Logs** for exact error
 2. **Verify API Key** is set in Supabase secrets
 3. **Check Resend Dashboard** for API key status
-4. **Verify Email Address** `skvg256@gmail.com` is valid
+4. **Verify Email Address** `farmsight11@gmail.com` is valid
 
 ### Issue: Email sent but not received
 
@@ -149,7 +149,7 @@ After fixing issues, test:
 - [ ] Resend API returns 200 status
 - [ ] Email ID is returned in response
 - [ ] Email appears in Resend dashboard as "sent"
-- [ ] Email received in skvg256@gmail.com
+- [ ] Email received in farmsight11@gmail.com
 - [ ] Reply-to works correctly
 
 ## Support
