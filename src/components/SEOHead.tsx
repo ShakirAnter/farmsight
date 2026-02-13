@@ -55,6 +55,66 @@ export function SEOHead({
     updateMetaTag('author', 'FarmSight', false);
     updateMetaTag('viewport', 'width=device-width, initial-scale=1.0, maximum-scale=5.0', false);
     
+    // Google Site Verification
+    updateMetaTag('google-site-verification', 'PUOEWQvha6YL9kKeUyW47C8g5V-TQpA5RTWt6OqORxY', false);
+    
+    // Extended SEO meta tags
+    updateMetaTag('subject', 'Agricultural Management System for Uganda', false);
+    updateMetaTag('copyright', 'FarmSight 2025 - 2026', false);
+    updateMetaTag('language', 'EN, LG, SW', false);
+    updateMetaTag('classification', 'Agriculture, Business, Technology', false);
+    updateMetaTag('category', 'Agriculture', false);
+    updateMetaTag('coverage', 'Uganda', false);
+    updateMetaTag('distribution', 'Global', false);
+    updateMetaTag('rating', 'General', false);
+    updateMetaTag('revisit-after', '7 days', false);
+    
+    // Detailed description meta tags
+    updateMetaTag('abstract', 'FarmSight is a comprehensive agricultural management system designed specifically for Ugandan farmers. Track crop production, monitor market prices, manage farming calendars, identify diseases, and access farming tips - all offline!', false);
+    updateMetaTag('topic', 'Agricultural Technology, Crop Management, Farm Management Software', false);
+    updateMetaTag('summary', 'Complete farming solution for Ugandan farmers with offline support, real-time market prices, crop comparison, disease guides, tutorials, and multi-language interface (English, Luganda, Swahili).', false);
+    
+    // Geographic and regional meta tags
+    updateMetaTag('geo.region', 'UG', false);
+    updateMetaTag('geo.placename', 'Uganda', false);
+    updateMetaTag('geo.position', '1.373333;32.290275', false); // Kampala coordinates
+    updateMetaTag('ICBM', '1.373333, 32.290275', false);
+    updateMetaTag('DC.title', title, false);
+    
+    // Target audience
+    updateMetaTag('audience', 'Farmers, Agricultural Workers, Farm Managers, Agricultural Students', false);
+    updateMetaTag('target', 'farmers, agriculture professionals, agricultural students', false);
+    
+    // Website purpose and functionality
+    updateMetaTag('purpose', 'Help Ugandan farmers manage their farms efficiently with offline-first agricultural management tools, market price tracking, and comprehensive farming resources.', false);
+    updateMetaTag('page-type', 'Web Application', false);
+    updateMetaTag('content-type', 'Agricultural Management System', false);
+    
+    // Features list for better discoverability
+    updateMetaTag('features', 'Offline Support, Crop Input Forms, Market Prices (UGX), Farming Calendar, Disease Guide, Pest Management, Crop Comparison, PDF Reports, Weather Integration, Multi-language Support, Dark Mode, Progressive Web App', false);
+    
+    // Language alternatives
+    updateMetaTag('language', 'English', false);
+    updateMetaTag('DC.language', 'en, lg, sw', false);
+    
+    // Commercial information
+    updateMetaTag('price', 'Free', false);
+    updateMetaTag('availability', 'Available 24/7', false);
+    
+    // Accessibility
+    updateMetaTag('accessibility', 'Works offline, Mobile-friendly, PWA, Multi-language support', false);
+    
+    // Additional Open Graph tags
+    updateMetaTag('og:email', 'farmsight11@gmail.com');
+    updateMetaTag('og:phone_number', '+256');
+    updateMetaTag('og:latitude', '1.373333');
+    updateMetaTag('og:longitude', '32.290275');
+    updateMetaTag('og:street-address', 'Uganda');
+    updateMetaTag('og:locality', 'Kampala');
+    updateMetaTag('og:region', 'Central Region');
+    updateMetaTag('og:postal-code', '00000');
+    updateMetaTag('og:country-name', 'Uganda');
+    
     // Charset
     let charsetMeta = document.querySelector('meta[charset]');
     if (!charsetMeta) {
@@ -152,42 +212,187 @@ export function SEOHead({
 
     const structuredData = {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "FarmSight",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Any",
-      "description": description,
-      "image": image,
-      "url": url,
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "UGX"
-      },
-      "featureList": [
-        "Offline Support",
-        "Real-time Market Prices",
-        "Crop Management",
-        "Farming Calendar",
-        "Multi-language Support (English, Luganda, Swahili)",
-        "Dark Mode",
-        "PDF Export",
-        "Disease Guide",
-        "Weather Integration"
-      ],
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "ratingCount": "256"
-      },
-      "screenshot": image,
-      "softwareVersion": "2.0",
-      "datePublished": "2024-01-01",
-      "dateModified": new Date().toISOString().split('T')[0],
-      "inLanguage": ["en", "lg", "sw"],
-      "availableOnDevice": "Desktop, Mobile, Tablet",
-      "browserRequirements": "Requires JavaScript. Requires HTML5.",
-      "countriesSupported": "Uganda"
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "FarmSight",
+          "alternateName": "FarmSight Uganda",
+          "applicationCategory": "BusinessApplication",
+          "applicationSubCategory": "Agricultural Management",
+          "operatingSystem": "Any",
+          "description": description,
+          "image": image,
+          "url": url,
+          "author": {
+            "@type": "Person",
+            "name": "Sujal Kerai",
+            "jobTitle": "Developer"
+          },
+          "creator": {
+            "@type": "Organization",
+            "name": "FarmSight",
+            "email": "farmsight11@gmail.com",
+            "address": {
+              "@type": "PostalAddress",
+              "addressCountry": "Uganda",
+              "addressLocality": "Kampala"
+            }
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "UGX",
+            "availability": "https://schema.org/InStock",
+            "category": "Free Agricultural Software"
+          },
+          "featureList": [
+            "Complete Offline Functionality",
+            "Real-time Market Prices in UGX",
+            "Comprehensive Crop Management",
+            "Farming Calendar with Activity Tracking",
+            "Disease and Pest Identification Guide",
+            "Crop Comparison and Analysis",
+            "PDF Report Generation",
+            "Weather Integration",
+            "Multi-language Support (English, Luganda, Swahili)",
+            "Dark Mode Interface",
+            "Progressive Web App (PWA)",
+            "Data Export Capabilities",
+            "Farming Tips and Best Practices",
+            "Video Tutorials",
+            "24+ Ugandan Crops Database",
+            "All Uganda Districts Coverage",
+            "Service Worker for Offline Access",
+            "IndexedDB Local Storage",
+            "Automatic Data Synchronization"
+          ],
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "256",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
+          "screenshot": image,
+          "softwareVersion": "2.0",
+          "softwareHelp": {
+            "@type": "CreativeWork",
+            "url": url + "#tutorials"
+          },
+          "datePublished": "2024-01-01",
+          "dateModified": new Date().toISOString().split('T')[0],
+          "inLanguage": ["en", "lg", "sw"],
+          "availableOnDevice": ["Desktop", "Mobile", "Tablet"],
+          "browserRequirements": "Requires JavaScript. Requires HTML5.",
+          "countriesSupported": "Uganda",
+          "educationalUse": "Agricultural Education and Farm Management",
+          "audience": {
+            "@type": "Audience",
+            "audienceType": "Farmers, Agricultural Workers, Students",
+            "geographicArea": {
+              "@type": "Place",
+              "name": "Uganda"
+            }
+          },
+          "serviceType": "Agricultural Management System",
+          "areaServed": {
+            "@type": "Country",
+            "name": "Uganda"
+          }
+        },
+        {
+          "@type": "Organization",
+          "name": "FarmSight",
+          "url": url,
+          "logo": image,
+          "email": "farmsight11@gmail.com",
+          "description": "Comprehensive agricultural management system for Ugandan farmers",
+          "foundingDate": "2025",
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "Uganda",
+            "addressLocality": "Kampala"
+          },
+          "areaServed": {
+            "@type": "Country",
+            "name": "Uganda"
+          },
+          "knowsAbout": [
+            "Agriculture",
+            "Crop Management",
+            "Farm Management",
+            "Agricultural Technology",
+            "Market Prices",
+            "Disease Management",
+            "Pest Control"
+          ]
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "FarmSight PWA",
+          "applicationCategory": "Agriculture",
+          "operatingSystem": "Progressive Web App",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "UGX"
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "256"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "name": "FarmSight",
+          "url": url,
+          "description": description,
+          "inLanguage": ["en", "lg", "sw"],
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": url + "?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Does FarmSight work offline?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! FarmSight is designed to work completely offline. All features including crop management, market prices, farming calendar, and reports work without internet connection."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What languages does FarmSight support?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "FarmSight supports three languages: English, Luganda, and Swahili, making it accessible to farmers across Uganda."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is FarmSight free to use?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, FarmSight is completely free for all Ugandan farmers. There are no subscription fees or hidden charges."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What crops does FarmSight support?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "FarmSight supports over 24 major Ugandan crops including Maize, Coffee, Beans, Bananas, Cassava, Rice, and many more with detailed management information for each."
+              }
+            }
+          ]
+        }
+      ]
     };
 
     structuredDataScript.textContent = JSON.stringify(structuredData);
