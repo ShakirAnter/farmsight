@@ -248,7 +248,7 @@ export function AboutPage() {
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                <h4 className="font-semibold mb-2 text-indigo-600 dark:text-indigo-400">React & TypeScript</h4>
+                <h4 className="font-semibold mb-2 text-indigo-600 dark:text-indigo-400">React</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Fast, reliable, and type-safe codebase for a smooth user experience.
                 </p>

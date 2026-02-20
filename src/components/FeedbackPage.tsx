@@ -1,14 +1,8 @@
-import { useState } from 'react'
 import { Button } from './ui/button'
-import { Input } from './ui/input'
-import { Label } from './ui/label'
-import { Textarea } from './ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { BackgroundSlideshow } from './BackgroundSlideshow'
 import { Footer } from './Footer'
-import { ArrowLeft, Send, Mail } from 'lucide-react'
-import { toast } from 'sonner@2.0.3'
-import { publicAnonKey, projectId } from '../utils/supabase/info'
+import { ArrowLeft, Mail, ExternalLink } from 'lucide-react'
 import logoImage from 'figma:asset/64b13f9d2c96fcfd2df5bbb31b4ae89d8ec5929a.png'
 
 interface FeedbackPageProps {
@@ -16,71 +10,8 @@ interface FeedbackPageProps {
   username?: string
 }
 
-export function FeedbackPage({ onBack, username }: FeedbackPageProps) {
-  const [name, setName] = useState(username || '')
-  const [email, setEmail] = useState('')
-  const [subject, setSubject] = useState('')
-  const [message, setMessage] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!name || !email || !subject || !message) {
-      toast.error('Please fill in all fields')
-      return
-    }
-
-    setIsSubmitting(true)
-
-    try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-f40baa9e/send-feedback`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${publicAnonKey}`
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            subject,
-            message
-          })
-        }
-      )
-
-      const data = await response.json()
-
-      if (response.ok) {
-        // Check if email was actually sent or just saved
-        if (data.emailSent === false || data.warning) {
-          toast.success('✅ Feedback saved successfully! (Note: Email notification could not be sent)', {
-            duration: 5000
-          })
-        } else {
-          toast.success('✅ Feedback sent successfully! Thank you for your feedback.')
-        }
-        setName(username || '')
-        setEmail('')
-        setSubject('')
-        setMessage('')
-      } else {
-        console.error('Feedback submission error:', data)
-        if (data.error?.includes('not configured')) {
-          toast.error('⚠️ Email service not configured. Please contact the administrator to set up RESEND_API_KEY.')
-        } else {
-          toast.error(`❌ ${data.error || 'Failed to send feedback'}`)
-        }
-      }
-    } catch (error) {
-      console.error('Error sending feedback:', error)
-      toast.error('❌ Failed to send feedback. Please check your connection and try again.')
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
+export function FeedbackPage({ onBack }: FeedbackPageProps) {
+  const googleFormUrl = 'https://forms.gle/AyoFtTFP6rSLzcCc7'
 
   return (
     <BackgroundSlideshow>
@@ -116,101 +47,57 @@ export function FeedbackPage({ onBack, username }: FeedbackPageProps) {
               Back
             </Button>
 
-            <Card className="shadow-xl bg-white/95 backdrop-blur-sm animate-in fade-in-50 slide-in-from-bottom-5 duration-500">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <Mail className="h-6 w-6 text-green-600" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-2xl">Send Us Feedback</CardTitle>
-                    <CardDescription className="mt-1">
-                      We'd love to hear from you! Share your thoughts, suggestions, or report any issues.
-                    </CardDescription>
-                  </div>
-                </div>
+            <Card className="shadow-xl bg-white/95 backdrop-blur-sm dark:bg-gray-800/95 border-2 border-green-200 dark:border-green-700">
+              <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-b border-green-200 dark:border-green-700">
+                <CardTitle className="flex items-center gap-2 text-2xl text-green-800 dark:text-green-300">
+                  <Mail className="h-6 w-6 text-green-600 dark:text-green-400" />
+                  Send Us Your Feedback
+                </CardTitle>
+                <CardDescription className="dark:text-gray-400">
+                  We value your feedback! Please share your thoughts, suggestions, or report any issues.
+                </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-800">
-                    📧 <strong>Your feedback will be sent to:</strong> farmsight11@gmail.com
-                  </p>
-                  <p className="text-xs text-blue-600 mt-1">
-                    We typically respond within 24-48 hours
-                  </p>
+              <CardContent className="pt-6">
+                {/* Google Form Embedded */}
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-l-4 border-green-600 dark:border-green-500 rounded-lg p-4 mb-4 shadow-md">
+                    <p className="text-sm text-green-800 dark:text-green-300 flex items-start gap-2">
+                      <Mail className="h-5 w-5 mt-0.5 flex-shrink-0 text-green-600 dark:text-green-400" />
+                      <span>
+                        Your feedback will be sent to <strong className="text-green-900 dark:text-green-200">farmsight11@gmail.com</strong>. 
+                        We typically respond within 24-48 hours.
+                      </span>
+                    </p>
+                  </div>
+
+                  {/* Embedded Google Form */}
+                  <div className="rounded-xl overflow-hidden border-2 border-green-200 dark:border-green-700 shadow-lg bg-white dark:bg-gray-900">
+                    <iframe 
+                      src={googleFormUrl}
+                      width="100%" 
+                      height="800" 
+                      frameBorder="0" 
+                      marginHeight={0} 
+                      marginWidth={0}
+                      className="w-full"
+                      title="FarmSight Feedback Form"
+                    >
+                      Loading feedback form...
+                    </iframe>
+                  </div>
+
+                  {/* Alternative: Open in new tab button */}
+                  <div className="text-center pt-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => window.open(googleFormUrl, '_blank')}
+                      className="flex items-center gap-2 mx-auto bg-green-50 dark:bg-green-900/30 border-green-300 dark:border-green-600 hover:bg-green-100 dark:hover:bg-green-900/50 text-green-800 dark:text-green-300 shadow-md"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      Open Form in New Tab
+                    </Button>
+                  </div>
                 </div>
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Your Name *</Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="Enter your name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                      className="bg-white"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Your Email *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="your.email@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="bg-white"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="subject">Subject *</Label>
-                    <Input
-                      id="subject"
-                      type="text"
-                      placeholder="What is your feedback about?"
-                      value={subject}
-                      onChange={(e) => setSubject(e.target.value)}
-                      required
-                      className="bg-white"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Message *</Label>
-                    <Textarea
-                      id="message"
-                      placeholder="Please share your feedback, suggestions, or concerns..."
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      required
-                      rows={6}
-                      className="bg-white resize-none"
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full flex items-center justify-center gap-2"
-                  >
-                    {isSubmitting ? (
-                      <>Sending...</>
-                    ) : (
-                      <>
-                        <Send className="h-4 w-4" />
-                        Send Feedback
-                      </>
-                    )}
-                  </Button>
-
-                  <div className="text-sm text-center text-gray-600 bg-blue-50 p-3 rounded-md border border-blue-200">
-                    Your feedback will be sent to our team and we'll get back to you as soon as possible.
-                  </div>
-                </form>
               </CardContent>
             </Card>
           </div>

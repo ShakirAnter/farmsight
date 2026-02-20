@@ -39,6 +39,9 @@ export function ReportView({ report, username, onBack }: ReportViewProps) {
     const pageHeight = doc.internal.pageSize.getHeight()
     let yPosition = 20
 
+    // Force black text color for PDF (important for dark mode compatibility)
+    doc.setTextColor(0, 0, 0)
+
     // Load logo image once for reuse
     let logoImg: HTMLImageElement | null = null
     try {
@@ -218,27 +221,27 @@ export function ReportView({ report, username, onBack }: ReportViewProps) {
         </Button>
       </div>
 
-      <Card className="shadow-lg bg-white/95 backdrop-blur-sm">
+      <Card className="shadow-lg bg-white/95 backdrop-blur-sm dark:bg-gray-800/95">
         <CardHeader>
           <CardTitle>Financial Summary</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">Total Land Size</p>
-              <p className="text-2xl mt-1">{report.totalLandSize.toFixed(2)} acres</p>
+            <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
+              <p className="text-sm text-gray-600 dark:text-gray-300">Total Land Size</p>
+              <p className="text-2xl mt-1 dark:text-white">{report.totalLandSize.toFixed(2)} acres</p>
             </div>
-            <div className="bg-orange-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">Total Cost</p>
-              <p className="text-2xl mt-1">UGX {report.totalCost.toLocaleString()}</p>
+            <div className="bg-orange-50 dark:bg-orange-900/30 p-4 rounded-lg">
+              <p className="text-sm text-gray-600 dark:text-gray-300">Total Cost</p>
+              <p className="text-2xl mt-1 dark:text-white">UGX {report.totalCost.toLocaleString()}</p>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">Expected Revenue</p>
-              <p className="text-2xl mt-1">UGX {report.totalRevenue.toLocaleString()}</p>
+            <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
+              <p className="text-sm text-gray-600 dark:text-gray-300">Expected Revenue</p>
+              <p className="text-2xl mt-1 dark:text-white">UGX {report.totalRevenue.toLocaleString()}</p>
             </div>
-            <div className={`${report.totalProfit >= 0 ? 'bg-emerald-50' : 'bg-red-50'} p-4 rounded-lg`}>
-              <p className="text-sm text-gray-600">Profit/Loss</p>
-              <p className={`text-2xl mt-1 ${report.totalProfit >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+            <div className={`${report.totalProfit >= 0 ? 'bg-emerald-50 dark:bg-emerald-900/30' : 'bg-red-50 dark:bg-red-900/30'} p-4 rounded-lg`}>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Profit/Loss</p>
+              <p className={`text-2xl mt-1 ${report.totalProfit >= 0 ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
                 UGX {report.totalProfit.toLocaleString()}
               </p>
             </div>
@@ -246,7 +249,7 @@ export function ReportView({ report, username, onBack }: ReportViewProps) {
         </CardContent>
       </Card>
 
-      <Card className="shadow-lg bg-white/95 backdrop-blur-sm">
+      <Card className="shadow-lg bg-white/95 backdrop-blur-sm dark:bg-gray-800/95">
         <CardHeader>
           <CardTitle>Crop Details</CardTitle>
         </CardHeader>
@@ -257,40 +260,40 @@ export function ReportView({ report, username, onBack }: ReportViewProps) {
               const profit = revenue - crop.costOfProduction
               
               return (
-                <div key={index} className="border rounded-lg p-4">
-                  <h3 className="text-lg mb-3">{crop.cropName}</h3>
+                <div key={index} className="border rounded-lg p-4 dark:border-gray-700">
+                  <h3 className="text-lg mb-3 dark:text-white">{crop.cropName}</h3>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                     <div>
-                      <span className="text-gray-600">Location:</span>
-                      <span className="ml-2">{crop.location}</span>
+                      <span className="text-gray-600 dark:text-gray-400">Location:</span>
+                      <span className="ml-2 dark:text-gray-200">{crop.location}</span>
                     </div>
                     <div>
-                      <span className="text-gray-600">Season:</span>
-                      <span className="ml-2">{crop.season}</span>
+                      <span className="text-gray-600 dark:text-gray-400">Season:</span>
+                      <span className="ml-2 dark:text-gray-200">{crop.season}</span>
                     </div>
                     <div>
-                      <span className="text-gray-600">Land Size:</span>
-                      <span className="ml-2">{crop.landSize} {crop.landUnit}</span>
+                      <span className="text-gray-600 dark:text-gray-400">Land Size:</span>
+                      <span className="ml-2 dark:text-gray-200">{crop.landSize} {crop.landUnit}</span>
                     </div>
                     <div>
-                      <span className="text-gray-600">Expected Yield:</span>
-                      <span className="ml-2">{crop.expectedYield} {crop.yieldUnit}</span>
+                      <span className="text-gray-600 dark:text-gray-400">Expected Yield:</span>
+                      <span className="ml-2 dark:text-gray-200">{crop.expectedYield} {crop.yieldUnit}</span>
                     </div>
                     <div>
-                      <span className="text-gray-600">Cost:</span>
-                      <span className="ml-2">UGX {crop.costOfProduction.toLocaleString()}</span>
+                      <span className="text-gray-600 dark:text-gray-400">Cost:</span>
+                      <span className="ml-2 dark:text-gray-200">UGX {crop.costOfProduction.toLocaleString()}</span>
                     </div>
                     <div>
-                      <span className="text-gray-600">Price per {crop.yieldUnit}:</span>
-                      <span className="ml-2">UGX {crop.sellingPrice.toLocaleString()}</span>
+                      <span className="text-gray-600 dark:text-gray-400">Price per {crop.yieldUnit}:</span>
+                      <span className="ml-2 dark:text-gray-200">UGX {crop.sellingPrice.toLocaleString()}</span>
                     </div>
                     <div>
-                      <span className="text-gray-600">Revenue:</span>
-                      <span className="ml-2">UGX {revenue.toLocaleString()}</span>
+                      <span className="text-gray-600 dark:text-gray-400">Revenue:</span>
+                      <span className="ml-2 dark:text-gray-200">UGX {revenue.toLocaleString()}</span>
                     </div>
                     <div>
-                      <span className="text-gray-600">Profit/Loss:</span>
-                      <span className={`ml-2 ${profit >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+                      <span className="text-gray-600 dark:text-gray-400">Profit/Loss:</span>
+                      <span className={`ml-2 ${profit >= 0 ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
                         UGX {profit.toLocaleString()}
                       </span>
                     </div>
@@ -303,7 +306,7 @@ export function ReportView({ report, username, onBack }: ReportViewProps) {
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="shadow-lg bg-white/95 backdrop-blur-sm">
+        <Card className="shadow-lg bg-white/95 backdrop-blur-sm dark:bg-gray-800/95">
           <CardHeader>
             <CardTitle>Cost Distribution by Crop</CardTitle>
           </CardHeader>
@@ -330,7 +333,7 @@ export function ReportView({ report, username, onBack }: ReportViewProps) {
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg bg-white/95 backdrop-blur-sm">
+        <Card className="shadow-lg bg-white/95 backdrop-blur-sm dark:bg-gray-800/95">
           <CardHeader>
             <CardTitle>Revenue Distribution by Crop</CardTitle>
           </CardHeader>
@@ -358,7 +361,7 @@ export function ReportView({ report, username, onBack }: ReportViewProps) {
         </Card>
       </div>
 
-      <Card className="shadow-lg bg-white/95 backdrop-blur-sm">
+      <Card className="shadow-lg bg-white/95 backdrop-blur-sm dark:bg-gray-800/95">
         <CardHeader>
           <CardTitle>Profit/Loss Analysis by Crop</CardTitle>
         </CardHeader>
@@ -380,23 +383,23 @@ export function ReportView({ report, username, onBack }: ReportViewProps) {
         </CardContent>
       </Card>
 
-      <Card className="shadow-lg bg-white/95 backdrop-blur-sm">
+      <Card className="shadow-lg bg-white/95 backdrop-blur-sm dark:bg-gray-800/95">
         <CardHeader>
           <CardTitle>Key Recommendation</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-600">
-            <p>{report.recommendations[0]}</p>
+          <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg border-l-4 border-green-600 dark:border-green-500">
+            <p className="dark:text-gray-200">{report.recommendations[0]}</p>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="shadow-lg bg-white/95 backdrop-blur-sm">
+      <Card className="shadow-lg bg-white/95 backdrop-blur-sm dark:bg-gray-800/95">
         <CardHeader>
           <CardTitle>Conclusion</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
+          <div className="space-y-3 dark:text-gray-200">
             <p>
               Your farming operation with {report.crops.length} crop(s) across {report.totalLandSize.toFixed(2)} acres is currently {report.totalProfit >= 0 ? 'profitable' : 'showing losses'}. With a total {report.totalProfit >= 0 ? 'profit' : 'loss'} of UGX {Math.abs(report.totalProfit).toLocaleString()}, there are clear opportunities for improvement.
             </p>
