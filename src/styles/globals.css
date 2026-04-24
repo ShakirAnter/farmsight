@@ -61,6 +61,15 @@
   --indigo-dark: #4f46e5;
   --cyan: #06b6d4;
   --cyan-dark: #0891b2;
+  
+  /* Smooth animation tokens */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-slow: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-fast: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-speed: 300ms;
+  --transition-slow: 500ms;
+  --transition-fast: 150ms;
 }
 
 .dark {
@@ -230,9 +239,312 @@
 html {
   font-size: var(--font-size);
   letter-spacing: 0 !important;
+  scroll-behavior: smooth;
 }
 
 /* Additional global reset for all text elements */
 div, span, p, h1, h2, h3, h4, h5, h6, a, button, input, textarea, select, label {
   letter-spacing: 0 !important;
+}
+
+/* ========================================
+   SMOOTH ANIMATIONS & TRANSITIONS
+   ======================================== */
+
+/* Smooth scrolling for all containers */
+html {
+  scroll-behavior: smooth;
+}
+
+*:where([class*="overflow"], [class*="scroll"]) {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Button hover animations */
+button:not(:disabled) {
+  transition: all var(--transition-speed) var(--ease-smooth);
+}
+
+button:not(:disabled):hover {
+  transform: translateY(-2px);
+}
+
+button:not(:disabled):active {
+  transform: translateY(0px);
+  transition-duration: var(--transition-fast);
+}
+
+/* Input focus animations */
+input, textarea, select {
+  transition: border-color var(--transition-speed) var(--ease-smooth),
+              box-shadow var(--transition-speed) var(--ease-smooth),
+              background-color var(--transition-speed) var(--ease-smooth);
+}
+
+input:focus, textarea:focus, select:focus {
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+/* Link hover effects */
+a {
+  transition: color var(--transition-speed) var(--ease-smooth),
+              transform var(--transition-speed) var(--ease-smooth);
+}
+
+/* Image smooth loading */
+img {
+  transition: opacity var(--transition-slow) var(--ease-smooth);
+}
+
+img:not([src]), img[src=""] {
+  opacity: 0;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in {
+  animation: fadeIn 0.6s var(--ease-smooth) forwards;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.5s var(--ease-bounce) forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s var(--ease-smooth) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.5s var(--ease-smooth) forwards;
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.6s var(--ease-smooth) forwards;
+}
+
+.animate-bounce {
+  animation: bounce 2s var(--ease-smooth) infinite;
+}
+
+.animate-pulse-smooth {
+  animation: pulse 3s var(--ease-smooth) infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Stagger animations for lists - REMOVED to fix runtime error */
+
+/* Glass morphism effect */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all var(--transition-speed) var(--ease-smooth);
+}
+
+.glass-effect:hover {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  transform: translateY(-2px);
+}
+
+/* Smooth loading skeleton */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Smooth modal/dialog entrance */
+[role="dialog"], 
+[class*="modal"], 
+[class*="dialog"],
+[class*="popover"] {
+  animation: fadeInScale 0.3s var(--ease-bounce) forwards;
+}
+
+/* Page transition */
+.page-transition {
+  animation: fadeIn 0.4s var(--ease-smooth) forwards;
+}
+
+/* Hover glow effect */
+.hover-glow {
+  position: relative;
+  transition: all var(--transition-speed) var(--ease-smooth);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
+}
+
+/* Ripple effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.ripple-effect:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 0;
+  transition: 0s;
+}
+
+/* Smooth transitions for theme changes */
+html.dark {
+  transition: background-color var(--transition-slow) var(--ease-smooth),
+              color var(--transition-slow) var(--ease-smooth);
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* GPU acceleration for smoother animations */
+button:hover, a:hover {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Smooth performance */
+@media (hover: hover) {
+  button:hover {
+    transform: translateY(-2px) translateZ(0);
+  }
 }

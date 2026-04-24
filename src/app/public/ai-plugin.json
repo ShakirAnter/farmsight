@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "FarmSight",
+  "name_for_model": "farmsight",
+  "description_for_human": "Agricultural management system for Ugandan farmers with offline support, market prices, and crop management.",
+  "description_for_model": "FarmSight is a comprehensive agricultural management system designed for Ugandan farmers. It provides offline support, real-time market prices in UGX, crop management tools, farming calendar, disease identification guides, and multi-language support (English, Luganda, Swahili). The platform is a Senior 3 school project focused on 'Utilization of Available Resources for Community Development' in Uganda.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "none",
+    "url": "https://farmsight.com"
+  },
+  "logo_url": "https://farmsight.com/icon-192.png",
+  "contact_email": "farmsight11@gmail.com",
+  "legal_info_url": "https://farmsight.com/about"
+}

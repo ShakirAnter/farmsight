@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="PUOEWQvha6YL9kKeUyW47C8g5V-TQpA5RTWt6OqORxY" />
+  <meta name="description" content="FarmSight - Comprehensive agricultural management system for Ugandan farmers with offline support, market prices, farming calendar, and crop management tools.">
+  <meta name="keywords" content="farming, agriculture, Uganda, crop management, market prices, farming calendar, offline app, FarmSight, agricultural technology">
+  <meta name="author" content="Sujal Kerai">
+  <meta name="theme-color" content="#16a34a">
+  
+  <!-- Open Graph / Facebook / ChatGPT -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://farmsight.com/">
+  <meta property="og:title" content="FarmSight - Agricultural Management System for Uganda">
+  <meta property="og:description" content="Comprehensive agricultural management system for Ugandan farmers with offline support, market prices, farming calendar, and crop management tools. Works 100% offline!">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1200&h=630&fit=crop">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://farmsight.com/">
+  <meta property="twitter:title" content="FarmSight - Agricultural Management System for Uganda">
+  <meta property="twitter:description" content="Comprehensive agricultural management system for Ugandan farmers with offline support, market prices, farming calendar, and crop management tools.">
+  <meta property="twitter:image" content="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1200&h=630&fit=crop">
+  
+  <!-- AI & Search Engine Optimization -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow">
+  <meta name="bingbot" content="index, follow">
+  <meta name="application-name" content="FarmSight">
+  <meta name="msapplication-TileColor" content="#16a34a">
+  
+  <!-- Structured Data for AI & Search Engines -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "FarmSight",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "description": "Comprehensive agricultural management system for Ugandan farmers with offline support, market prices, farming calendar, and crop management tools.",
+    "url": "https://farmsight.com",
+    "author": {
+      "@type": "Person",
+      "name": "Sujal Kerai"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "UGX"
+    },
+    "featureList": [
+      "Complete Offline Functionality",
+      "Real-time Market Prices in UGX",
+      "Comprehensive Crop Management",
+      "Farming Calendar with Activity Tracking",
+      "Disease & Pest Identification Guide",
+      "Multi-language Support (English, Luganda, Swahili)",
+      "Dark Mode Support",
+      "PDF Report Generation",
+      "Crop Comparison Tools",
+      "Farming Tips & Tutorials"
+    ],
+    "availableLanguage": ["English", "Luganda", "Swahili"],
+    "countryOfOrigin": {
+      "@type": "Country",
+      "name": "Uganda"
+    }
+  }
+  </script>
+  
+  <link rel="icon" type="image/png" href="/icon-192.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="manifest" href="/manifest.json">
+  <title>FarmSight - Agricultural Management System for Uganda</title>
+  
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+  
+  <style>
+    /* Critical CSS for initial render */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f172a;
+      color: white;
+    }
+    
+    #root {
+      min-height: 100vh;
+    }
+    
+    /* Loading screen for live preview */
+    #preview-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+    
+    #preview-loader.loaded {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .loader-logo {
+      font-size: 48px;
+      font-weight: bold;
+      color: #22c55e;
+      margin-bottom: 20px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    .loader-text {
+      color: #94a3b8;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    
+    .loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(34, 197, 94, 0.2);
+      border-top-color: #22c55e;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Live Preview Loader -->
+  <div id="preview-loader">
+    <div class="loader-logo">🌾 FarmSight</div>
+    <div class="loader-text">Loading Agricultural Management System...</div>
+    <div class="loader-spinner"></div>
+  </div>
+  
+  <div id="root"></div>
+  <script type="module" src="/App.tsx"></script>
+  
+  <!-- Live Preview Renderer -->
+  <script src="/preview-renderer.js"></script>
+  
+  <!-- AI Assistant Integration Script -->
+  <script>
+    // Make site information available for AI assistants and browsers
+    window.FarmSightInfo = {
+      name: "FarmSight",
+      version: "2.0",
+      description: "Agricultural Management System for Ugandan Farmers",
+      features: [
+        "Offline Support",
+        "Market Prices",
+        "Crop Management",
+        "Farming Calendar",
+        "Disease Guide",
+        "Multi-language Support"
+      ],
+      languages: ["English", "Luganda", "Swahili"],
+      currency: "UGX",
+      region: "Uganda",
+      developer: "Sujal Kerai",
+      email: "farmsight11@gmail.com",
+      project: "Senior 3 School Project - Utilization of Available Resources for Community Development",
+      year: 2025,
+      openAccess: true,
+      requiresAuth: false
+    };
+    
+    // Service Worker registration for offline support
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => console.log('✅ FarmSight Service Worker registered'))
+          .catch(err => console.log('⚠️ Service Worker registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>
