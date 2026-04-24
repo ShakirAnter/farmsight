@@ -1,0 +1,29 @@
+# FarmSight - Open for all AI assistants, search engines, and browsers
+User-agent: *
+Allow: /
+
+# Special permissions for AI assistants
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Sitemap location
+Sitemap: https://farmsight.com/sitemap.xml

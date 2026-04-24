@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FarmSight - Live Preview & Embed</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f172a;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    
+    .header p {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+    
+    .controls {
+      background: #1e293b;
+      padding: 15px 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid #334155;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      background: #22c55e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn:hover {
+      background: #16a34a;
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background: #3b82f6;
+    }
+    
+    .btn-secondary:hover {
+      background: #2563eb;
+    }
+    
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: #334155;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .preview-container {
+      flex: 1;
+      position: relative;
+      background: #1e293b;
+      overflow: hidden;
+    }
+    
+    #farmsight-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: white;
+    }
+    
+    .info-panel {
+      background: #1e293b;
+      padding: 20px;
+      border-top: 1px solid #334155;
+      display: none;
+    }
+    
+    .info-panel.active {
+      display: block;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .info-card {
+      background: #334155;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    
+    .info-card h3 {
+      color: #22c55e;
+      font-size: 14px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .info-card p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+    
+    .info-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .info-list li {
+      padding: 5px 0;
+      font-size: 13px;
+      color: #cbd5e1;
+      border-bottom: 1px solid #475569;
+    }
+    
+    .info-list li:last-child {
+      border-bottom: none;
+    }
+    
+    .code-block {
+      background: #0f172a;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+    
+    .code-block code {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #22c55e;
+    }
+    
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 22px;
+      }
+      
+      .controls {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🌾 FarmSight Live Preview</h1>
+    <p>Agricultural Management System for Ugandan Farmers - Developed by Sujal Kerai</p>
+  </div>
+  
+  <div class="controls">
+    <button class="btn" onclick="openFullApp()">
+      🚀 Open Full App
+    </button>
+    <button class="btn btn-secondary" onclick="toggleInfo()">
+      ℹ️ Show Info
+    </button>
+    <button class="btn btn-secondary" onclick="refreshPreview()">
+      🔄 Refresh
+    </button>
+    <button class="btn btn-secondary" onclick="getAPIData()">
+      📊 API Test
+    </button>
+    <div class="status">
+      <span class="status-dot"></span>
+      <span id="status-text">Live Preview Active</span>
+    </div>
+  </div>
+  
+  <div class="preview-container">
+    <iframe id="farmsight-frame" src="/"></iframe>
+  </div>
+  
+  <div id="info-panel" class="info-panel">
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>📱 App Information</h3>
+        <div class="info-list">
+          <li><strong>Name:</strong> FarmSight</li>
+          <li><strong>Version:</strong> 2.0</li>
+          <li><strong>Developer:</strong> Sujal Kerai</li>
+          <li><strong>Region:</strong> Uganda</li>
+          <li><strong>Currency:</strong> UGX</li>
+          <li><strong>Year:</strong> 2025</li>
+        </div>
+      </div>
+      
+      <div class="info-card">
+        <h3>🌟 Features</h3>
+        <div class="info-list">
+          <li>✅ Complete Offline Support</li>
+          <li>✅ Real-time Market Prices</li>
+          <li>✅ Crop Management</li>
+          <li>✅ Farming Calendar</li>
+          <li>✅ Disease Guide</li>
+          <li>✅ Multi-language Support</li>
+        </div>
+      </div>
+      
+      <div class="info-card">
+        <h3>🌍 Languages</h3>
+        <div class="info-list">
+          <li>🇬🇧 English</li>
+          <li>🇺🇬 Luganda</li>
+          <li>🇹🇿 Swahili</li>
+        </div>
+      </div>
+      
+      <div class="info-card">
+        <h3>🔗 Embed Code</h3>
+        <p>Use this code to embed FarmSight in your website:</p>
+        <div class="code-block">
+          <code>&lt;iframe src="https://farmsight.com" width="100%" height="600" frameborder="0"&gt;&lt;/iframe&gt;</code>
+        </div>
+      </div>
+      
+      <div class="info-card">
+        <h3>📡 API Access</h3>
+        <p>Access FarmSight data programmatically:</p>
+        <div class="code-block">
+          <code>// Get app info<br>
+window.frames[0].FarmSightAPI.getInfo();<br><br>
+// Get current state<br>
+window.frames[0].FarmSightAPI.getState();</code>
+        </div>
+      </div>
+      
+      <div class="info-card">
+        <h3>🎓 Project Info</h3>
+        <p><strong>School Project:</strong> Senior 3 Class, Uganda, 2025</p>
+        <p><strong>Focus:</strong> Utilization of Available Resources for Community Development</p>
+        <p><strong>Contact:</strong> farmsight11@gmail.com</p>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Preview manager
+    const frame = document.getElementById('farmsight-frame');
+    const infoPanel = document.getElementById('info-panel');
+    const statusText = document.getElementById('status-text');
+    
+    // Listen for messages from iframe
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'farmsight-ready') {
+        statusText.textContent = 'Ready ✓';
+        console.log('✅ FarmSight loaded:', event.data);
+      }
+      
+      if (event.data && event.data.type === 'farmsight-performance') {
+        console.log('⚡ Load time:', event.data.loadTime + 'ms');
+      }
+    });
+    
+    // Functions
+    function openFullApp() {
+      window.open('/', '_blank');
+    }
+    
+    function toggleInfo() {
+      infoPanel.classList.toggle('active');
+    }
+    
+    function refreshPreview() {
+      frame.src = frame.src;
+      statusText.textContent = 'Refreshing...';
+      setTimeout(() => {
+        statusText.textContent = 'Live Preview Active';
+      }, 1000);
+    }
+    
+    function getAPIData() {
+      try {
+        const iframe = document.getElementById('farmsight-frame');
+        const api = iframe.contentWindow.FarmSightAPI;
+        
+        if (api) {
+          console.log('📊 FarmSight API Data:');
+          console.log('Info:', api.getInfo());
+          console.log('State:', api.getState());
+          console.log('Stats:', api.getStats());
+          
+          alert('✅ API test complete! Check console for details.');
+        } else {
+          alert('⚠️ API not ready yet. Wait for app to load.');
+        }
+      } catch (error) {
+        console.error('API Error:', error);
+        alert('❌ Could not access API: ' + error.message);
+      }
+    }
+    
+    // Auto-test API when ready
+    setTimeout(() => {
+      console.log('🧪 Auto-testing FarmSight API...');
+      try {
+        const iframe = document.getElementById('farmsight-frame');
+        if (iframe.contentWindow.FarmSightAPI) {
+          console.log('✅ API available:', iframe.contentWindow.FarmSightAPI.getInfo());
+        }
+      } catch (e) {
+        console.log('⏳ API not ready yet');
+      }
+    }, 3000);
+  </script>
+</body>
+</html>
